@@ -1,0 +1,20 @@
+---
+import { SITE } from "@/config/site";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <p>&copy; {year} {SITE.author}</p>
+  <ul class="site-footer__links">
+    {
+      SITE.social.map((link) => (
+        <li>
+          <a href={link.href} rel="me noopener">
+            {link.label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</footer>

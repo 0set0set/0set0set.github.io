@@ -1,0 +1,25 @@
+{
+  "dependencies": {
+    "@astrojs/mdx": "^6.0.3",
+    "@astrojs/rss": "^4.0.18",
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "^6.4.8"
+  },
+  "description": "Static articles website built with Astro.",
+  "devDependencies": {
+    "@astrojs/check": "^0.9.9",
+    "typescript": "^5.7.3"
+  },
+  "name": "web",
+  "packageManager": "npm@11.10.0",
+  "private": true,
+  "scripts": {
+    "build": "astro build",
+    "check": "astro check",
+    "dev": "astro dev",
+    "preview": "astro preview",
+    "sync": "astro sync"
+  },
+  "type": "module",
+  "version": "0.1.0"
+}

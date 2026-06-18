@@ -1,0 +1,26 @@
+---
+import FormattedDate from "@/components/FormattedDate.astro";
+import type { Article } from "@/lib/articles";
+
+interface Props {
+  articles: Article[];
+}
+
+const { articles } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const href = (id: string) => `${base}articles/${id}`;
+---
+
+<ul class="article-list" role="list">
+  {
+    articles.map((article) => (
+      <li class="article-list__item">
+        <a class="article-list__link" href={href(article.id)}>
+          <span class="article-list__title">{article.data.title}</span>
+          <FormattedDate date={article.data.date} />
+        </a>
+        <p class="article-list__description">{article.data.description}</p>
+      </li>
+    ))
+  }
+</ul>

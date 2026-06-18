@@ -1,0 +1,43 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import FormattedDate from "@/components/FormattedDate.astro";
+import { toIsoDate, type Article } from "@/lib/articles";
+
+interface Props {
+  article: Article;
+}
+
+const { article } = Astro.props;
+const { title, description, date, updated } = article.data;
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  type="article"
+  publishedTime={toIsoDate(date)}
+  modifiedTime={updated ? toIsoDate(updated) : undefined}
+>
+  <article class="article">
+    <header class="article__header">
+      <p class="article__meta">
+        <FormattedDate date={date} />
+        {updated && (
+          <>
+            <span aria-hidden="true">·</span>
+            <span>updated on <FormattedDate date={updated} /></span>
+          </>
+        )}
+      </p>
+      <h1 class="article__title">{title}</h1>
+      <p class="article__lede">{description}</p>
+    </header>
+    <div class="article__body prose">
+      <slot />
+    </div>
+    <footer class="article__footer">
+      <a class="back-link" href={base}>&larr; All writing</a>
+    </footer>
+  </article>
+</BaseLayout>

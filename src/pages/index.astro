@@ -1,0 +1,28 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ArticleList from "@/components/ArticleList.astro";
+import { getArticlesByCategory } from "@/lib/articles";
+import { SITE } from "@/config/site";
+
+const sections = await getArticlesByCategory();
+---
+
+<BaseLayout>
+  <section class="intro">
+    <h1 class="intro__lead">{SITE.tagline}</h1>
+    <div class="intro__bio">
+      {SITE.bio.map((paragraph) => <p>{paragraph}</p>)}
+    </div>
+  </section>
+
+  {
+    sections.map((section) => (
+      <section class="section" aria-labelledby={`section-${section.category}`}>
+        <h2 class="section__title" id={`section-${section.category}`}>
+          {section.label}
+        </h2>
+        <ArticleList articles={section.articles} />
+      </section>
+    ))
+  }
+</BaseLayout>

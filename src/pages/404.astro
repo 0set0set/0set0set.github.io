@@ -1,0 +1,12 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout title="Page not found" description="This page does not exist.">
+  <section class="intro">
+    <h1 class="intro__lead">404 — This page does not exist or has moved.</h1>
+    <p><a href={base}>&larr; Back to home</a></p>
+  </section>
+</BaseLayout>
