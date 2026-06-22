@@ -19,6 +19,9 @@ const articles = defineCollection({
     updated: z.coerce.date().optional(),
     category: z.enum(CATEGORIES).default("essay"),
     draft: z.boolean().default(false),
+    keywords: z.array(z.string()).optional(),
+    image: z.string().optional(),
+    summary: z.string().optional(),
   }),
 });
 

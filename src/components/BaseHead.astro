@@ -1,9 +1,13 @@
 ---
 import { SITE } from "@/config/site";
+import JsonLd from "@/components/JsonLd.astro";
 
 interface Props {
   title: string;
   description?: string;
+  headline?: string;
+  keywords?: readonly string[];
+  image?: string;
   publishedTime?: string;
   modifiedTime?: string;
   type?: "website" | "article";
@@ -12,12 +16,69 @@ interface Props {
 const {
   title,
   description = SITE.description,
+  headline,
+  keywords,
+  image,
   publishedTime,
   modifiedTime,
   type = "website",
 } = Astro.props;
 
+const base = import.meta.env.BASE_URL;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const siteRoot = new URL(base, Astro.site).href;
+const ogImage = new URL(image ?? `${base}og.png`, Astro.site).href;
+
+const authorUrl = SITE.social[0]?.href;
+const sameAs = SITE.social.map((link) => link.href);
+
+const personId = `${siteRoot}#person`;
+const websiteId = `${siteRoot}#website`;
+
+const person = {
+  "@type": "Person",
+  "@id": personId,
+  name: SITE.author,
+  ...(authorUrl ? { url: authorUrl } : {}),
+  ...(sameAs.length > 0 ? { sameAs } : {}),
+};
+
+const website = {
+  "@type": "WebSite",
+  "@id": websiteId,
+  url: siteRoot,
+  name: SITE.title,
+  description: SITE.description,
+  inLanguage: SITE.locale,
+  publisher: { "@id": personId },
+};
+
+const graph: Record<string, unknown>[] = [person, website];
+
+if (type === "article") {
+  graph.push({
+    "@type": "BlogPosting",
+    "@id": `${canonical}#article`,
+    headline: headline ?? title,
+    description,
+    url: canonical,
+    mainEntityOfPage: canonical,
+    inLanguage: SITE.locale,
+    isPartOf: { "@id": websiteId },
+    author: { "@id": personId },
+    publisher: { "@id": personId },
+    image: ogImage,
+    ...(publishedTime ? { datePublished: publishedTime } : {}),
+    ...(modifiedTime || publishedTime
+      ? { dateModified: modifiedTime ?? publishedTime }
+      : {}),
+    ...(keywords && keywords.length > 0
+      ? { keywords: keywords.join(", ") }
+      : {}),
+  });
+}
+
+const jsonLd = { "@context": "https://schema.org", "@graph": graph };
 ---
 
 <meta charset="utf-8" />
@@ -27,14 +88,17 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 <title>{title}</title>
 <meta name="description" content={description} />
 <meta name="author" content={SITE.author} />
+{keywords && keywords.length > 0 && (
+  <meta name="keywords" content={keywords.join(", ")} />
+)}
 <link rel="canonical" href={canonical} />
 
-<link rel="icon" href={`${import.meta.env.BASE_URL}favicon.svg`} type="image/svg+xml" />
+<link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
 <link
   rel="alternate"
   type="application/rss+xml"
   title={SITE.title}
-  href={`${import.meta.env.BASE_URL}rss.xml`}
+  href={`${base}rss.xml`}
 />
 
 <meta property="og:type" content={type} />
@@ -43,13 +107,19 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 <meta property="og:url" content={canonical} />
 <meta property="og:site_name" content={SITE.title} />
 <meta property="og:locale" content={SITE.locale} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
 {publishedTime && <meta property="article:published_time" content={publishedTime} />}
 {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
 
-<meta name="twitter:card" content="summary" />
+<meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
 
 <meta name="color-scheme" content="light dark" />
 <meta name="theme-color" content="#0b0b0c" media="(prefers-color-scheme: dark)" />
 <meta name="theme-color" content="#fbfbf9" media="(prefers-color-scheme: light)" />
+
+<JsonLd schema={jsonLd} />

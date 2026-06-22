@@ -1,0 +1,14 @@
+---
+type SchemaObject = Record<string, unknown>;
+
+interface Props {
+  schema: SchemaObject | SchemaObject[];
+}
+
+const { schema } = Astro.props;
+
+// Escape `<` so the serialized JSON can never break out of the <script> element.
+const json = JSON.stringify(schema).replace(/</g, "\\u003c");
+---
+
+<script type="application/ld+json" is:inline set:html={json} />

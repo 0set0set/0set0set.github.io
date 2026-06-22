@@ -3,6 +3,11 @@ title: Hello, world
 description: A first note on why this space exists, and what to expect from it.
 date: 2026-06-18
 category: essay
+keywords:
+  - software engineering
+  - systems
+  - writing
+  - personal blog
 ---
 
 Every program I've ever written started with these two words. It felt right to

@@ -8,13 +8,15 @@ interface Props {
 }
 
 const { article } = Astro.props;
-const { title, description, date, updated } = article.data;
+const { title, description, date, updated, keywords, image } = article.data;
 const base = import.meta.env.BASE_URL;
 ---
 
 <BaseLayout
   title={title}
   description={description}
+  keywords={keywords}
+  image={image}
   type="article"
   publishedTime={toIsoDate(date)}
   modifiedTime={updated ? toIsoDate(updated) : undefined}

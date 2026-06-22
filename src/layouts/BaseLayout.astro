@@ -8,12 +8,15 @@ import "@/styles/global.css";
 interface Props {
   title?: string;
   description?: string;
+  keywords?: readonly string[];
+  image?: string;
   publishedTime?: string;
   modifiedTime?: string;
   type?: "website" | "article";
 }
 
-const { title, description, publishedTime, modifiedTime, type } = Astro.props;
+const { title, description, keywords, image, publishedTime, modifiedTime, type } =
+  Astro.props;
 const pageTitle = title ? `${title} — ${SITE.title}` : SITE.title;
 ---
 
@@ -22,7 +25,10 @@ const pageTitle = title ? `${title} — ${SITE.title}` : SITE.title;
   <head>
     <BaseHead
       title={pageTitle}
+      headline={title}
       description={description}
+      keywords={keywords}
+      image={image}
       publishedTime={publishedTime}
       modifiedTime={modifiedTime}
       type={type}
@@ -37,5 +43,19 @@ const pageTitle = title ? `${title} — ${SITE.title}` : SITE.title;
       </main>
       <SiteFooter />
     </div>
+    <!-- 100% privacy-first analytics -->
+    <script
+      is:inline
+      data-collect-dnt="true"
+      async
+      src="https://scripts.simpleanalyticscdn.com/latest.js"
+    ></script>
+    <noscript>
+      <img
+        src="https://queue.simpleanalyticscdn.com/noscript.gif?collect-dnt=true"
+        alt=""
+        referrerpolicy="no-referrer-when-downgrade"
+      />
+    </noscript>
   </body>
 </html>

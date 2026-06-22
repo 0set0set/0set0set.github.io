@@ -22,10 +22,12 @@
   --space-xl: clamp(2.75rem, 2rem + 3.4vw, 5rem);
   --space-2xl: clamp(4rem, 2.8rem + 5.4vw, 7.5rem);
 
-  --container: 64rem;
-  --measure: 42rem;
-  --measure-wide: 52rem;
-  --gutter: clamp(1.25rem, 5vw, 3.5rem);
+  /* One cohesive reading column: header, footer, and content share a width so
+     the side margins stay symmetric instead of leaving a void on the right. */
+  --container: 50rem;
+  --measure: 50rem;
+  --measure-wide: 50rem;
+  --gutter: clamp(1.25rem, 5vw, 3rem);
   --radius: 0.5rem;
 
   --bg: #fbfbf9;
@@ -416,6 +418,124 @@ a:hover {
 
 .prose img {
   border-radius: var(--radius);
+}
+
+/* Tables (GFM): scrollable on small screens, quiet borders. */
+.prose .table-scroll,
+.prose table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-family: var(--font-sans);
+  font-size: var(--step--1);
+}
+
+.prose table :is(th, td) {
+  border: 1px solid var(--border);
+  padding: var(--space-2xs) var(--space-xs);
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose table th {
+  background: var(--surface);
+  font-weight: 600;
+}
+
+/* Citation markers (GFM footnote references). */
+.prose sup a {
+  font-family: var(--font-sans);
+  font-size: 0.7em;
+  font-weight: 600;
+  padding: 0 0.1em;
+  text-decoration: none;
+  color: var(--accent);
+}
+
+/* References section (GFM footnotes), rendered at the end of the article. */
+.prose .footnotes {
+  margin-top: var(--space-xl);
+  padding-top: var(--space-m);
+  border-top: 1px solid var(--border);
+  font-size: var(--step--1);
+  color: var(--text-muted);
+}
+
+.prose .footnotes h2 {
+  font-family: var(--font-sans);
+  font-size: var(--step--1);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 0;
+  margin-bottom: var(--space-s);
+}
+
+.prose .footnotes ol {
+  padding-left: 1.2em;
+}
+
+.prose .footnotes li {
+  margin-top: var(--space-2xs);
+  line-height: 1.5;
+}
+
+.prose .footnotes li::marker {
+  color: var(--text-muted);
+}
+
+.prose .footnotes a {
+  text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  overflow-wrap: anywhere;
+}
+
+/* Key takeaways: a scannable, citable summary placed near the top. */
+.prose .key-takeaways {
+  margin-top: var(--space-l);
+  padding: var(--space-m);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-sans);
+  font-size: var(--step--1);
+}
+
+.prose .key-takeaways__title {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin-bottom: var(--space-s);
+}
+
+.prose .key-takeaways ul {
+  margin: 0;
+  padding-left: 1.2em;
+  display: grid;
+  gap: var(--space-xs);
+}
+
+.prose .key-takeaways li {
+  line-height: 1.5;
+}
+
+/* Heading anchors (rehype-autolink-headings): discreet, appear on hover/focus. */
+.prose :is(h2, h3) .heading-anchor {
+  margin-left: 0.4em;
+  color: var(--text-muted);
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+
+.prose :is(h2, h3):hover .heading-anchor,
+.prose .heading-anchor:focus-visible {
+  opacity: 1;
+}
+
+.prose .heading-anchor:hover {
+  color: var(--accent);
 }
 
 @media (min-width: 48rem) {
